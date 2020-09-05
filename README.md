@@ -30,7 +30,7 @@ Will use the default template, but you can supply your own template. These are a
 | --template_path | set the path of the template to use                    |
 | --module_file   | set the path to the file where the module can be found |
 
-Resolutation Order:
+Resolution Order:
 - Commandline Arguments
 - Config
 - Mix.Project
