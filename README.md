@@ -1,4 +1,3 @@
-Compiling 2 files (.ex)
 %{
   app: :mix_readme,
   description: "Generate a README based on the moduledoc of your app.",
