@@ -1,0 +1,13 @@
+# MixReadme
+
+## Installation
+
+```elixir
+def deps do
+    [
+        {:<%= app %>, "~> <%= version %>", runtime: false}
+    ]
+end
+```
+
+<%= module_doc %>
