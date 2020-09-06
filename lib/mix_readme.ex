@@ -12,10 +12,6 @@ defmodule MixReadme do
     :package
   ]
 
-  @readme_names ["./readme.eex", "./README.eex", "./Readme.eex"]
-
-  @default_template "# <%= module_name %>\n\n<%= module_doc %>"
-
   @doc """
   The main function
   """
@@ -24,12 +20,15 @@ defmodule MixReadme do
 
     opts =
       opts
+      |> Map.put_new(:backend, MixReadme.Backend.EEx)
       |> load_module()
       |> put_module_doc()
 
-    @default_template
-    |> load_eex_template(opts)
-    |> EEx.eval_string(Map.to_list(opts))
+    backend = Map.fetch!(opts, :backend)
+
+    backend.default_template()
+    |> load_template(opts, backend)
+    |> backend.render!(opts)
   end
 
   @doc """
@@ -52,11 +51,14 @@ defmodule MixReadme do
     Map.put(opts, :module_doc, module_doc)
   end
 
-  defp load_module(%{module: module} = configs) do
+  defp load_module(%{module: module, backend: backend} = configs) do
     module = String.to_existing_atom("Elixir.#{module}")
     {:module, module} = Code.ensure_compiled(module)
+    {:module, backend} = Code.ensure_compiled(backend)
 
-    Map.put(configs, :module, module)
+    configs 
+    |> Map.put(:module, module) 
+    |> Map.put(:backend, backend)
   rescue
     _e in ArgumentError ->
       # from to_existing_atom
@@ -104,26 +106,24 @@ defmodule MixReadme do
     |> Keyword.take(@mix_config_keys)
   end
 
-  defp load_eex_template(default, opts) do
-    case find_readme(opts) do
+  defp load_template(default, opts, backend) do
+    case find_readme(opts, backend) do
       nil -> default
       readme_file -> File.read!(readme_file)
     end
   end
 
-  defp find_readme(%{template_path: template_path}) do
+  defp find_readme(%{template_path: template_path}, _) do
     template_path
   end
 
-  defp find_readme(_) do
-    @readme_names
+  defp find_readme(_, backend) do
+    backend.readme_templates()
     |> Enum.map(fn x -> {x, File.exists?(x)} end)
     |> Enum.filter(fn {_, v} -> v end)
     |> Enum.map(fn {k, _} -> k end)
     |> Enum.at(0)
   end
-
-  def readme_names, do: @readme_names
 
   def mix_config_keys, do: @mix_config_keys
 end

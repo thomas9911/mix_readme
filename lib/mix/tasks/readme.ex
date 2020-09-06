@@ -22,7 +22,7 @@ defmodule Mix.Tasks.Readme do
 
   @mix_config_keys MixReadme.mix_config_keys()
 
-  @readme_names MixReadme.readme_names()
+  @readme_names MixReadme.Backend.EEx.readme_templates()
 
   @moduledoc """
   Generate a README based on the moduledoc of your app.
@@ -101,6 +101,28 @@ defmodule Mix.Tasks.Readme do
       <%= end) %>
   ```
 
+  ## Custom Backend
+
+  By default the template format used is EEx, because this is the default Elixir templating engine.
+  But this can be changed by setting the `:backend` key in the config to a module that implements the `MixReadme.Backend` behaviour.
+  For instance take a look at `https://github.com/thomas9911/mix_readme_mustache`.
+
+  in `mix.exs`:
+  ```
+  [
+      {:mix_readme, "~> 0.2.0", only: :dev, runtime: false},
+      {:mix_readme_mustache, "~> 0.1.0", only: :dev, runtime: false}
+  ]
+  ```
+
+  in `config/config.exs`:
+  ```
+  import Config
+
+  config :mix_readme,
+      backend: MixReadme.Backend.Mustache
+
+  ```
   """
 
   use Mix.Task
