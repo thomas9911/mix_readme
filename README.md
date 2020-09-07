@@ -5,7 +5,7 @@
 ```elixir
 def deps do
     [
-        {:mix_readme, "~> 0.2.0", runtime: false}
+        {:mix_readme, "~> 0.2.1", runtime: false}
     ]
 end
 ```
@@ -19,7 +19,7 @@ This so you can write Doctests that get tested and have them in your README.
 mix readme > README.md
 ```
 
-Will use the default template, but you can supply your own template. These are automatically found in ["./readme.eex", "./README.eex", "./Readme.eex"] or you can set the path in the config under the `template_path` key.
+Will use the default template, but you can supply your own template. These are automatically found in ["./priv/readme.eex", "./priv/README.eex", "./priv/Readme.eex", "./readme.eex", "./README.eex", "./Readme.eex"] or you can set the path in the config under the `template_path` key.
 
 ## Available commandline arguments
 

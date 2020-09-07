@@ -12,8 +12,6 @@ defmodule MixReadme do
     :package
   ]
 
-  @priv :code.priv_dir(:mix_readme)
-
   @doc """
   The main function
   """
@@ -58,8 +56,8 @@ defmodule MixReadme do
     {:module, module} = Code.ensure_compiled(module)
     {:module, backend} = Code.ensure_compiled(backend)
 
-    configs 
-    |> Map.put(:module, module) 
+    configs
+    |> Map.put(:module, module)
     |> Map.put(:backend, backend)
   rescue
     _e in ArgumentError ->
@@ -121,7 +119,7 @@ defmodule MixReadme do
 
   defp find_readme(_, backend) do
     backend.readme_templates()
-    |> Enum.map(fn x -> {x, Path.join(@priv, x) |> File.exists?()} end)
+    |> Enum.map(fn x -> {x, File.exists?(x)} end)
     |> Enum.filter(fn {_, v} -> v end)
     |> Enum.map(fn {k, _} -> k end)
     |> Enum.at(0)
