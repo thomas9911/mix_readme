@@ -12,6 +12,8 @@ defmodule MixReadme do
     :package
   ]
 
+  @priv :code.priv_dir(:mix_readme)
+
   @doc """
   The main function
   """
@@ -119,7 +121,7 @@ defmodule MixReadme do
 
   defp find_readme(_, backend) do
     backend.readme_templates()
-    |> Enum.map(fn x -> {x, File.exists?(x)} end)
+    |> Enum.map(fn x -> {x, Path.join(@priv, x) |> File.exists?()} end)
     |> Enum.filter(fn {_, v} -> v end)
     |> Enum.map(fn {k, _} -> k end)
     |> Enum.at(0)
